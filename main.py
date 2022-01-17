@@ -6,6 +6,7 @@ import pyautogui
 import random
 import time
 import yaml
+import sys
 
 # load config.yaml
 f = open('config.yaml', 'r')
@@ -70,7 +71,7 @@ def click_template(template, value = 0, threshold = conf['threshold'], img = Non
                 pyautogui.click()
                 break
         except:
-            print(f'{attempt} attempt...')
+            #print(f'{attempt} attempt...')
             attempt += 1
             pause(3)
 
@@ -125,59 +126,51 @@ if __name__ == "__main__":
     global template
     template = load_template()
     print(f'=====> Loaded template\n')
+    print('=====> Program will start capturing screen within 10 sec\n')
+
+    pause(10)
 
     bot = bomber()
-    last = {'login' : 0, 'resend' : 0, 'connection' : 0}
+    last = {'refresh' : 0}
     login_timeout, resend_timeout, connection_timeout = 0, 0, 0
 
-    total_bot = check_template(template['connect_wallet']) + check_template(template['treasure_hunt']) + check_template(template['back2home']) + check_template(template['ok'])
+    total_bot = check_template(template['connect_wallet'], 0.9) + check_template(template['treasure_hunt'], 0.9) + check_template(template['back2home'], 0.9) + check_template(template['ok'], 0.9)
     print(f'{total_bot} Windows...\n')
 
     while True:
         now = time.time()
         tnow = time.strftime("[%H:%M:%S]", time.gmtime(now))
 
-        if now - last['login'] > login_timeout:
-            print(f'{tnow}[LOGIN] -----')
-            try:
-                if check_template(template['connect_wallet']):
-                    print(f'{tnow}[LOGIN] working...')
-                    bot.login()
-            except:
-                print(f'{tnow}[LOGIN] button not found')
-
-            last['login'] = now
-            login_timeout = conf['login'] * 60 + random.randint(0, conf['random'] * 60)
-            ntime = time.strftime("%M min %S sec", time.gmtime(login_timeout))
-            print(f'{tnow}[LOGIN] check again in next {ntime}')
-
-        if now - last['resend'] > resend_timeout:
-            print(f'{tnow}[RESEND] -----')
+        if now - last['refresh'] > resend_timeout:
+            print(f'{tnow} --------------------')
             try:
                 if check_template(template['back2home']):
-                    print(f'{tnow}[RESEND] working...')
+                    print(f'{tnow} resend heroes working...')
                     bot.resend()
+                    pause(5)
             except:
-                print(f'{tnow}[RESEND] button not found]')
+                print(f'{tnow} resend function error!!!')
 
-            last['resend'] = now
-            resend_timeout = conf['resend'] * 60 + random.randint(0, conf['random'] * 60)
-            ntime = time.strftime("%M min %S sec", time.gmtime(resend_timeout))
-            print(f'{tnow}[RESEND] check again in next {ntime}')
-
-        if now - last['connection'] > connection_timeout:
-            print(f'{tnow}[CONNECTION] -----')
             try:
-                if check_template(template['ok']):
-                    print(f'{tnow}[CONNECTION] working...')
-                    bot.connection()
+                for temp in range(check_template(template['connect_wallet'])):
+                    print(f'{tnow} reconnecting wallet...')
+                    bot.login()
+                    pause(5)
             except:
-                print(f'{tnow}[CONNECTION] button not found')
+                print(f'{tnow} login function error!!!')
 
-            last['connection'] = now
-            connection_timeout = conf['connection'] * 60 + random.randint(0, conf['random'] * 60)
-            ntime = time.strftime("%M min %S sec", time.gmtime(connection_timeout))
-            print(f'{tnow}[CONNECTION] check again in next {ntime}')
+            try:
+                for temp in range(check_template(template['ok'])):
+                    print(f'{tnow} reconnecting wallet...')
+                    bot.connection()
+                    pause(5)
+            except:
+                print(f'{tnow} connection function error!!!')
+
+            last['refresh'] = now
+            resend_timeout = conf['refresh'] * 60 + random.randint(0, conf['random'] * 60)
+            ntime = time.strftime("%M min %S sec", time.gmtime(resend_timeout))
+            print(f'{tnow} resending heroes again in next {ntime}')
 
         pause(1)
 

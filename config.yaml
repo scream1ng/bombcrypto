@@ -1,12 +1,6 @@
 ---
-#interval time for checking login page (in minutes)
-login: 20
-
 #interval time for resending heroes to work (in minutes)
-resend: 15
-
-#interval time for checking connection (in minutes)
-connection: 30
+refresh: 15
 
 #range random value that will additionally add from variable above (in minutes)
 random: 3
