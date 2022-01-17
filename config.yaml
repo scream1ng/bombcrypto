@@ -1,0 +1,19 @@
+---
+#interval time for checking login page (in minutes)
+login: 20
+
+#interval time for resending heroes to work (in minutes)
+resend: 15
+
+#interval time for checking connection (in minutes)
+connection: 30
+
+#range random value that will additionally add from variable above (in minutes)
+random: 3
+
+#delay between mouse or keyboard action (in seconds)
+interval: 1
+
+#accuracy of matching image, 0.8 = 80%
+threshold: 0.8
+...
