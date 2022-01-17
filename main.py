@@ -99,9 +99,6 @@ class bomber:
         pause(3)
         click_template(template['sign'])
         pause(3)
-        click_template(template['hero_home'])
-        click_template(template['all'])
-        click_template(template['x'])
         click_template(template['treasure_hunt'])
 
     def resend(self):
@@ -143,13 +140,6 @@ if __name__ == "__main__":
 
         if now - last['refresh'] > resend_timeout:
             print(f'{tnow} --------------------')
-            try:
-                if check_template(template['back2home']):
-                    print(f'{tnow} resend heroes working...')
-                    bot.resend()
-                    pause(5)
-            except:
-                print(f'{tnow} resend function error!!!')
 
             try:
                 for temp in range(check_template(template['connect_wallet'])):
@@ -166,6 +156,14 @@ if __name__ == "__main__":
                     pause(5)
             except:
                 print(f'{tnow} connection function error!!!')
+
+            try:
+                if check_template(template['back2home']):
+                    print(f'{tnow} resend heroes working...')
+                    bot.resend()
+                    pause(5)
+            except:
+                print(f'{tnow} resend function error!!!')
 
             last['refresh'] = now
             resend_timeout = conf['refresh'] * 60 + random.randint(0, conf['random'] * 60)
